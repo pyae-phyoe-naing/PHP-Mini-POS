@@ -6,6 +6,38 @@ if (!isset($_SESSION['user'])) {
     die();
 }
 $category = getAll('select * from category');
+if($_SERVER['REQUEST_METHOD']=='POST'){
+   $file = $_FILES['image'];
+   $errors = [];
+   if(empty($_POST['name'])){
+      $errors['name'] = 'Image is required!';
+   }
+   if(empty($_POST['description'])){
+    $errors['description'] = 'Image is required!';
+   }
+   if(empty($_POST['sale_price'])){
+    $errors['sale_price'] = 'Sale Price is required!';
+   }
+   if(empty($_POST['buy_price'])){
+    $errors['buy_price'] = 'Buy Price is required!';
+   }
+   if(empty($_POST['total_quantity'])){
+    $errors['total_quantity'] = 'Quantity is required!';
+   }
+   if(empty($file['name'])){
+      $errors['image'] = 'Image is required!';
+   }else{
+        // check file size 1024b 1kb 1024kb => 1m
+     $file_size =  $file['size'];
+     $file_limit = 1024*1024*2;
+     if($file_limit < $file_size){
+      $errors['image'] = 'Image must be below 2mb!';
+     }
+   }
+   if(empty($errors)){
+       print_r($_REQUEST);
+   }
+}
 require '../include/header.php';
 
 ?>
@@ -32,7 +64,7 @@ require '../include/header.php';
         <div class="card-body">
             <?php flash('error'); ?>
             <?php flash('success', 'success'); ?>
-            <form action="" class="row" method="POST">
+            <form action="" class="row" method="POST" enctype="multipart/form-data">
                 <div class="col-6">
                     <h4 class="text-white">Product Info</h4>
                     <div class="form-group">
@@ -46,14 +78,17 @@ require '../include/header.php';
                     <div class="form-group">
                         <label for="">Enter Name</label>
                         <input type="text" name="name" class="form-control">
+                        <?php isset($errors) ? validate($errors,'name') : '' ?>
                     </div>
                     <div class="form-group">
                         <label for="">Choose Image</label>
                         <input type="file" name="image" class="form-control p-1">
+                        <?php isset($errors) ? validate($errors,'image') : '' ?>
                     </div>
                     <div class="form-group">
                         <label for="">Enter Description</label>
                         <textarea name="description"  class="form-control"></textarea>
+                        <?php isset($errors) ? validate($errors,'name') : '' ?>
                     </div>
                 </div>
                 <!-- Product Inventory -->
@@ -65,6 +100,8 @@ require '../include/header.php';
                     <div class="form-group">
                         <label for="">Enter Sale Price</label>
                         <input type="number" name="sale_price" class="form-control">
+                        <?php isset($errors) ? validate($errors,'sale_price') : '' ?>
+
                     </div>
                    <span class="text-info">
                       <span class="fas fa-info-circle text-primary"></span> For Buy Info
@@ -72,14 +109,21 @@ require '../include/header.php';
                    <div class="form-group">
                         <label for="">Enter Total Quantity</label>
                         <input type="number" name="total_quantity" class="form-control">
+                        <?php isset($errors) ? validate($errors,'total_quantity') : '' ?>
+
                     </div>
                    <div class="form-group">
                         <label for="">Enter Buy Price</label>
                         <input type="number" name="buy_price" class="form-control">
+                        <?php isset($errors) ? validate($errors,'buy_price') : '' ?>
+
                     </div>
                     <div class="form-group">
                         <input type="date" value="<?php echo date('Y-m-d'); ?>" name="buy_date" class="form-control">
                     </div>
+                </div>
+                <div class="col-12">
+                   <input type="submit" value="Create" class="btn btn-warning">
                 </div>
             </form>
         </div>

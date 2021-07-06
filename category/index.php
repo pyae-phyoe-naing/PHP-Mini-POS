@@ -92,6 +92,7 @@ require '../include/footer.php';
      paginateBtn.click(function(){
          page += 1;
          $.get(`index.php?page=${page}`).then(function(data){
+            console.log(data);
            const res = JSON.parse(data);
            // console.log(res);
            if(!res.length){
