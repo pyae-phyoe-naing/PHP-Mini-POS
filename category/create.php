@@ -4,6 +4,7 @@ require '../include/header.php';
 if(!isset($_SESSION['user'])){
     setFlash('error','Please First Login');
     go('login.php');
+    die();
 }
 if($_SERVER['REQUEST_METHOD']=='POST'){
     $name = $_POST['name'];

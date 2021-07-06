@@ -13,7 +13,7 @@ if(isset($_GET['action'])){
  
  }
 
-$data =  getAll("select * from category order by id desc");
+$data =  getAll("select * from category order by id desc limit 2");
 
 
 ?>

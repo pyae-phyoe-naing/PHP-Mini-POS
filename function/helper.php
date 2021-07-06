@@ -1,4 +1,5 @@
 <?php
+
 function setFlash($flash,$message){
    $_SESSION[$flash] = '';
    $_SESSION[$flash] = $message;
@@ -23,4 +24,26 @@ function go($path){
 }
 function slug($str){
     return time().str_replace(' ','-',$str);
+}
+
+function paginate($par_page=5){
+    if(isset($_GET['page'])){
+        $page = $_GET['page'];
+    }else{
+        $page = 2;
+    }
+    if($page <=0 ){
+        $page = 2;
+    }
+    // paginate algorithms
+    // page 1 =  0 - 5
+    // page 2 =  5 - 5
+    // page 3 =  10 - 5
+    // ( page - 1  ) * par_page 
+    //
+    $start = ($page-1) * $par_page;
+    $limit = "$start,$par_page";
+    $sql = "select * from category order by id desc limit $limit";
+    $data = getAll($sql);
+    echo json_encode($data);
 }

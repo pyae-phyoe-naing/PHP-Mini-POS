@@ -3,6 +3,7 @@ require 'init.php';
 if(isset($_SESSION['user'])){
     setFlash('error','Already login');
     go('index.php');
+    die();
 }
 if($_SERVER['REQUEST_METHOD'] == 'POST'){
    $email = $_POST['email'];
