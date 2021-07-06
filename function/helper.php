@@ -26,7 +26,7 @@ function slug($str){
     return time().str_replace(' ','-',$str);
 }
 
-function paginate($par_page=5){
+function paginateCategory($par_page=5){
     if(isset($_GET['page'])){
         $page = $_GET['page'];
     }else{

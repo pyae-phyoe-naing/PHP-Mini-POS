@@ -1,9 +1,15 @@
 <?php
 require '../init.php';
-require '../include/header.php';
+
 if(!isset($_SESSION['user'])){
     setFlash('error','Please First Login');
     go('login.php');
+    die();
+}
+// paginate
+if(isset($_GET['page'])){
+    paginateCategory(2);
+    die();
 }
 // Category Delete
 if(isset($_GET['action'])){
@@ -15,7 +21,7 @@ if(isset($_GET['action'])){
 
 $data =  getAll("select * from category order by id desc limit 2");
 
-
+require '../include/header.php';
 ?>
 
 <!-- Breadcamp -->
@@ -45,7 +51,7 @@ $data =  getAll("select * from category order by id desc limit 2");
                        <th>Option</th>
                    </tr>
                </thead>
-               <tbody>
+               <tbody id="tbody">
                    <?php  foreach($data as $cat){  ?>
                    <tr>
                        <td><?php echo $cat->name; ?></td>
@@ -61,8 +67,8 @@ $data =  getAll("select * from category order by id desc limit 2");
                   <?php } ?>
                </tbody>
            </table>
-           <div class="text-center">
-               <button class="btn btn-warning">
+           <div class="text-center" >
+               <button class="btn btn-warning" id='paginateBtn'>
                   <span class="fa fa-arrow-down"></span>
                </button>
            </div>
@@ -77,3 +83,39 @@ $data =  getAll("select * from category order by id desc limit 2");
 require '../include/footer.php';
 
 ?>
+
+<script>
+  $(function(){
+     var page = 1;
+     var tbody = $('#tbody');
+     var paginateBtn = $('#paginateBtn');
+     paginateBtn.click(function(){
+         page += 1;
+         $.get(`index.php?page=${page}`).then(function(data){
+           const res = JSON.parse(data);
+           // console.log(res);
+           if(!res.length){
+             $("#paginateBtn").attr("disabled", 'disabled');
+           }
+             var str = '';
+             res.map(function(d){
+                str += `
+                 <tr>
+                       <td>${d.name}</td>
+                       <td>
+                           <a href="edit.php?slug=${d.slug}" class="btn btn-sm btn-primary">
+                               <i class="fas fa-edit"></i>
+                           </a>
+                           <a onclick="return confirm('Are you sure delete?');" href="index.php?slug=${d.slug}" class="btn btn-sm btn-danger">
+                               <i class="fas fa-trash-alt"></i>
+                           </a>
+                        </td>
+                   </tr>
+                `;
+             });
+             tbody.append(str);
+         })
+        
+     })
+  })
+</script>
