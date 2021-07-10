@@ -60,7 +60,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             [$last_id,$buy_price,$total_quantity,$buy_date]
         );
         setFlash('success','Product create success');
-        // go('index.php');
+         go('index.php');
+         die();
     }
 }
 require '../include/header.php';
