@@ -50,8 +50,8 @@ require '../include/header.php';
                         </div>
                         <div class="col-4">
                             <button class="btn btn-primary"><i class="fa fa-search"></i></button>
-                            <?php if($key != ''){ ?>
-                            <a href='index.php' class="btn btn-danger">X</a>
+                            <?php if ($key != '') { ?>
+                                <a href='index.php' class="btn btn-danger">X</a>
                             <?php } ?>
                         </div>
                     </div>
@@ -140,13 +140,13 @@ require '../include/footer.php';
             var search = "<?php echo $key ?>";
             var url = `index.php?page=${page}`;
             if (search) {
-                url +=`&search=${search}`;
+                url += `&search=${search}`;
             }
 
             $.get(url).then(function(data) {
                 //console.log(data);
                 const res = JSON.parse(data);
-                 console.log(res);
+                console.log(res);
                 if (!res.length) {
                     $("#paginateBtn").attr("disabled", 'disabled');
                 }
@@ -162,12 +162,13 @@ require '../include/footer.php';
                         <td>${d.total_quantity}</td>
                         <td>${d.sale_price}</td>
                        <td>
+                          <a href="detail.php?slug=${d.slug}" class="btn btn-sm btn-success">
+                               <i class="fas fa-eye"></i>
+                           </a>
                            <a href="edit.php?slug=${d.slug}" class="btn btn-sm btn-primary">
                                <i class="fas fa-edit"></i>
                            </a>
-                           <a href="detail.php?slug=${d.slug}" class="btn btn-sm btn-success">
-                               <i class="fas fa-eye"></i>
-                           </a>
+                         
                            <a onclick="return confirm('Are you sure delete?');" href="index.php?slug=${d.slug}" class="btn btn-sm btn-danger">
                                <i class="fas fa-trash-alt"></i>
                            </a>
