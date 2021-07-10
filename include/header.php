@@ -52,7 +52,7 @@
                 <span class="">Category</span>
               </a>
 
-              <a class="dropdown-item d-flex align-items-center" href="#">
+              <a class="dropdown-item d-flex align-items-center" href="<?php echo $base_url ?>product/index.php">
                 <i class="fa fa-shopping-bag text-warning"> </i>
                 <span class="">Product</span>
               </a>

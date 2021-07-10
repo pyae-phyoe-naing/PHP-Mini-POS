@@ -6,37 +6,62 @@ if (!isset($_SESSION['user'])) {
     die();
 }
 $category = getAll('select * from category');
-if($_SERVER['REQUEST_METHOD']=='POST'){
-   $file = $_FILES['image'];
-   $errors = [];
-   if(empty($_POST['name'])){
-      $errors['name'] = 'Image is required!';
-   }
-   if(empty($_POST['description'])){
-    $errors['description'] = 'Image is required!';
-   }
-   if(empty($_POST['sale_price'])){
-    $errors['sale_price'] = 'Sale Price is required!';
-   }
-   if(empty($_POST['buy_price'])){
-    $errors['buy_price'] = 'Buy Price is required!';
-   }
-   if(empty($_POST['total_quantity'])){
-    $errors['total_quantity'] = 'Quantity is required!';
-   }
-   if(empty($file['name'])){
-      $errors['image'] = 'Image is required!';
-   }else{
+if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+    $file = $_FILES['image'];
+    $errors = [];
+    if (empty($_POST['name'])) {
+        $errors['name'] = 'Image is required!';
+    }
+    if (empty($_POST['description'])) {
+        $errors['description'] = 'Image is required!';
+    }
+    if (empty($_POST['sale_price'])) {
+        $errors['sale_price'] = 'Sale Price is required!';
+    }
+    if (empty($_POST['buy_price'])) {
+        $errors['buy_price'] = 'Buy Price is required!';
+    }
+    if (empty($_POST['total_quantity'])) {
+        $errors['total_quantity'] = 'Quantity is required!';
+    }
+    if (empty($file['name'])) {
+        $errors['image'] = 'Image is required!';
+    } else {
         // check file size 1024b 1kb 1024kb => 1m
-     $file_size =  $file['size'];
-     $file_limit = 1024*1024*2;
-     if($file_limit < $file_size){
-      $errors['image'] = 'Image must be below 2mb!';
-     }
-   }
-   if(empty($errors)){
-       print_r($_REQUEST);
-   }
+        $file_size =  $file['size'];
+        $file_limit = 1024 * 1024 * 2;
+        if ($file_limit < $file_size) {
+            $errors['image'] = 'Image must be below 2mb!';
+        }
+    }
+    if (empty($errors)) {
+        ##upload image
+         $tmp_name = $file['tmp_name'];
+         $image = time().str_replace(' ','_',$file['name']);
+         $path = '../assets/img/'.$image;
+
+         move_uploaded_file($tmp_name,$path);
+
+        $category_id = $_REQUEST['category_id'];
+        $name = $_REQUEST['name'];
+        $slug = slug($name);
+        $description = $_REQUEST['description'];
+        $total_quantity = $_REQUEST['total_quantity'];
+        $sale_price = $_REQUEST['sale_price'];
+        $buy_price = $_REQUEST['buy_price'];
+        $buy_date = $_REQUEST['buy_date'];
+        query(
+            "insert into product (category_id,slug,name,description,image,total_quantity,sale_price) values (?,?,?,?,?,?,?)",
+            [$category_id, $slug,$name,$description,$image,$total_quantity,$sale_price]
+        );
+        $last_id = $conn->lastInsertId();
+        query(
+            "insert into product_buy (product_id,buy_price,total_quantity,buy_date) values (?,?,?,?)",
+            [$last_id,$buy_price,$total_quantity,$buy_date]
+        );
+        setFlash('success','Product create success');
+        // go('index.php');
+    }
 }
 require '../include/header.php';
 
@@ -70,52 +95,52 @@ require '../include/header.php';
                     <div class="form-group">
                         <label for="">Choose Category</label>
                         <select name="category_id" id="" class="form-control">
-                        <?php foreach($category as $c){ ?>
-                           <option value="<?php echo $c->id; ?>"><?php echo $c->name; ?></option>
-                           <?php } ?>
+                            <?php foreach ($category as $c) { ?>
+                                <option value="<?php echo $c->id; ?>"><?php echo $c->name; ?></option>
+                            <?php } ?>
                         </select>
                     </div>
                     <div class="form-group">
                         <label for="">Enter Name</label>
                         <input type="text" name="name" class="form-control">
-                        <?php isset($errors) ? validate($errors,'name') : '' ?>
+                        <?php isset($errors) ? validate($errors, 'name') : '' ?>
                     </div>
                     <div class="form-group">
                         <label for="">Choose Image</label>
                         <input type="file" name="image" class="form-control p-1">
-                        <?php isset($errors) ? validate($errors,'image') : '' ?>
+                        <?php isset($errors) ? validate($errors, 'image') : '' ?>
                     </div>
                     <div class="form-group">
                         <label for="">Enter Description</label>
-                        <textarea name="description"  class="form-control"></textarea>
-                        <?php isset($errors) ? validate($errors,'name') : '' ?>
+                        <textarea name="description" class="form-control"></textarea>
+                        <?php isset($errors) ? validate($errors, 'name') : '' ?>
                     </div>
                 </div>
                 <!-- Product Inventory -->
                 <div class="col-6">
                     <h4 class="text-white">Inventory</h4>
                     <span class="text-info">
-                      <span class="fas fa-info-circle text-primary"></span> For Sale Info
-                   </span>
+                        <span class="fas fa-info-circle text-primary"></span> For Sale Info
+                    </span>
                     <div class="form-group">
                         <label for="">Enter Sale Price</label>
                         <input type="number" name="sale_price" class="form-control">
-                        <?php isset($errors) ? validate($errors,'sale_price') : '' ?>
+                        <?php isset($errors) ? validate($errors, 'sale_price') : '' ?>
 
                     </div>
-                   <span class="text-info">
-                      <span class="fas fa-info-circle text-primary"></span> For Buy Info
-                   </span>
-                   <div class="form-group">
+                    <span class="text-info">
+                        <span class="fas fa-info-circle text-primary"></span> For Buy Info
+                    </span>
+                    <div class="form-group">
                         <label for="">Enter Total Quantity</label>
                         <input type="number" name="total_quantity" class="form-control">
-                        <?php isset($errors) ? validate($errors,'total_quantity') : '' ?>
+                        <?php isset($errors) ? validate($errors, 'total_quantity') : '' ?>
 
                     </div>
-                   <div class="form-group">
+                    <div class="form-group">
                         <label for="">Enter Buy Price</label>
                         <input type="number" name="buy_price" class="form-control">
-                        <?php isset($errors) ? validate($errors,'buy_price') : '' ?>
+                        <?php isset($errors) ? validate($errors, 'buy_price') : '' ?>
 
                     </div>
                     <div class="form-group">
@@ -123,7 +148,7 @@ require '../include/header.php';
                     </div>
                 </div>
                 <div class="col-12">
-                   <input type="submit" value="Create" class="btn btn-warning">
+                    <input type="submit" value="Create" class="btn btn-warning">
                 </div>
             </form>
         </div>
