@@ -10,9 +10,16 @@ if (isset($_GET['page'])) {
     paginateProduct(2);
     die();
 }
+// Search
+if (isset($_GET['search'])) {
+    $key = $_GET['search'];
+    $data =  getAll("select * from product where name like '%$key%' order by id desc limit 2");
+} else {
+    $key = '';
+    // get product
+    $data =  getAll("select * from product order by id desc limit 2");
+}
 
-// get product
-$data =  getAll("select * from product order by id desc limit 2");
 
 require '../include/header.php';
 
@@ -39,10 +46,13 @@ require '../include/header.php';
                 <form action="" class="d-inline">
                     <div class="form-row ">
                         <div class="col-8">
-                            <input type="text" name="search" class="form-control ">
+                            <input type="text" value="<?php echo $key ?>" name="search" class="form-control ">
                         </div>
                         <div class="col-4">
                             <button class="btn btn-primary"><i class="fa fa-search"></i></button>
+                            <?php if($key != ''){ ?>
+                            <a href='index.php' class="btn btn-danger">X</a>
+                            <?php } ?>
                         </div>
                     </div>
                 </form>
@@ -119,28 +129,35 @@ require '../include/footer.php';
 ?>
 <script>
     $(function() {
-        var url = "<?php echo $base_url ?>";
+        var base = "<?php echo $base_url ?>";
 
         var page = 1;
         var tbody = $('#tbody');
         var paginateBtn = $('#paginateBtn');
         paginateBtn.click(function() {
-            console.log(url);
             page += 1;
-            $.get(`index.php?page=${page}`).then(function(data) {
-                // console.log(data);
+            // search
+            var search = "<?php echo $key ?>";
+            var url = `index.php?page=${page}`;
+            if (search) {
+                url +=`&search=${search}`;
+            }
+
+            $.get(url).then(function(data) {
+                //console.log(data);
                 const res = JSON.parse(data);
-                // console.log(res);
+                 console.log(res);
                 if (!res.length) {
                     $("#paginateBtn").attr("disabled", 'disabled');
                 }
                 var str = '';
+
                 res.map(function(d) {
                     str += `
                  <tr>
                        <td>${d.name}</td>
                        <td>
-                            <img src="${url}assets/img/${d.image}" width="55" height="55" alt="">
+                            <img src="${base}assets/img/${d.image}" width="55" height="55" alt="">
                         </td>
                         <td>${d.total_quantity}</td>
                         <td>${d.sale_price}</td>
