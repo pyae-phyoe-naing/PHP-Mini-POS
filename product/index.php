@@ -5,6 +5,13 @@ if (!isset($_SESSION['user'])) {
     go('login.php');
     die();
 }
+// paginate
+if (isset($_GET['page'])) {
+    paginateProduct(2);
+    die();
+}
+
+// get product
 $data =  getAll("select * from product order by id desc limit 2");
 
 require '../include/header.php';
@@ -25,10 +32,25 @@ require '../include/header.php';
 
 <!-- Content -->
 <div class="container-fluid pr-5 pl-5 mt-1">
+    <div class="container">
+        <div class="d-flex justify-content-between mb-5">
+            <a class="btn btn-primary btn-sm mt-3" href="create.php"> Create</a>
+            <div class="w-50">
+                <form action="" class="d-inline">
+                    <div class="form-row ">
+                        <div class="col-8">
+                            <input type="text" name="search" class="form-control ">
+                        </div>
+                        <div class="col-4">
+                            <button class="btn btn-primary"><i class="fa fa-search"></i></button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
 
-    <a class="btn btn-primary btn-sm mt-2" href="create.php"> Create Product</a>
-
-    <div class="card col-6 offset-3">
+    <div class="card col-10 offset-1">
         <div class="card-header card">
             <?php flash('error'); ?>
             <?php flash('success', 'success') ?>
@@ -95,3 +117,58 @@ require '../include/header.php';
 require '../include/footer.php';
 
 ?>
+<script>
+    $(function() {
+        var url = "<?php echo $base_url ?>";
+
+        var page = 1;
+        var tbody = $('#tbody');
+        var paginateBtn = $('#paginateBtn');
+        paginateBtn.click(function() {
+            console.log(url);
+            page += 1;
+            $.get(`index.php?page=${page}`).then(function(data) {
+                // console.log(data);
+                const res = JSON.parse(data);
+                // console.log(res);
+                if (!res.length) {
+                    $("#paginateBtn").attr("disabled", 'disabled');
+                }
+                var str = '';
+                res.map(function(d) {
+                    str += `
+                 <tr>
+                       <td>${d.name}</td>
+                       <td>
+                            <img src="${url}assets/img/${d.image}" width="55" height="55" alt="">
+                        </td>
+                        <td>${d.total_quantity}</td>
+                        <td>${d.sale_price}</td>
+                       <td>
+                           <a href="edit.php?slug=${d.slug}" class="btn btn-sm btn-primary">
+                               <i class="fas fa-edit"></i>
+                           </a>
+                           <a href="detail.php?slug=${d.slug}" class="btn btn-sm btn-success">
+                               <i class="fas fa-eye"></i>
+                           </a>
+                           <a onclick="return confirm('Are you sure delete?');" href="index.php?slug=${d.slug}" class="btn btn-sm btn-danger">
+                               <i class="fas fa-trash-alt"></i>
+                           </a>
+                        </td>
+                        <td>
+                            <a href="sale.php?slug=${d.slug}" class="btn btn-sm btn-outline-success">
+                                Sale
+                            </a>
+                            <a href="buy.php?slug=${d.slug}" class="btn btn-sm btn-outline-danger">
+                                Buy
+                            </a>
+                        </td>
+                   </tr>
+                `;
+                });
+                tbody.append(str);
+            })
+
+        })
+    })
+</script>
