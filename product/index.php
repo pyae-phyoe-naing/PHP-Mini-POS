@@ -103,7 +103,7 @@ require '../include/header.php';
                                     <a href=<?php echo $base_url . "product/sale.php?slug=" . $cat->slug; ?> class="btn btn-sm btn-outline-success">
                                         Sale
                                     </a>
-                                    <a href=<?php echo $base_url . "product/buy.php?slug=" . $cat->slug; ?> class="btn btn-sm btn-outline-danger">
+                                    <a href=<?php echo $base_url . "product-buy/index.php?slug=" . $cat->slug; ?> class="btn btn-sm btn-outline-danger">
                                         Buy
                                     </a>
                                 </td>
@@ -177,7 +177,7 @@ require '../include/footer.php';
                             <a href="sale.php?slug=${d.slug}" class="btn btn-sm btn-outline-success">
                                 Sale
                             </a>
-                            <a href="buy.php?slug=${d.slug}" class="btn btn-sm btn-outline-danger">
+                            <a href="${base}product-buy/index.php?slug=${d.slug}" class="btn btn-sm btn-outline-danger">
                                 Buy
                             </a>
                         </td>

@@ -10,7 +10,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $file = $_FILES['image'];
     $errors = [];
     if (empty($_POST['name'])) {
-        $errors['name'] = 'Image is required!';
+        $errors['name'] = 'Name is required!';
     }
     if (empty($_POST['description'])) {
         $errors['description'] = 'Image is required!';
