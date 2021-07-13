@@ -19,8 +19,20 @@ if (isset($_GET['search'])) {
     // get product
     $data =  getAll("select * from product order by id desc limit 2");
 }
-
-
+// sale product
+if(isset($_GET['sale']) and !empty($_GET['sale'])){
+    $product_slug = $_GET['product_slug'];
+    $product = getOne("select * from product where slug=?",[$product_slug]);
+    $product_id = $product->id;
+    $sale_price = $product->sale_price;
+    $update_qty = $product->total_quantity - 1;
+    $date = date("Y-m-d");
+    query("update product set total_quantity=? where slug=?",[$update_qty,$product_slug]);
+    query("insert into product_sale (product_id,sale_price,date) values (?,?,?)",[$product_id,$sale_price,$data]);
+    setFlash('success', 'Product sale success');
+    go('index.php');
+    die();
+}
 require '../include/header.php';
 
 ?>
@@ -77,6 +89,7 @@ require '../include/header.php';
                             <th>Sale Price</th>
                             <th>Option</th>
                             <th>Action</th>
+                            <th>Detail</th>
                         </tr>
                     </thead>
                     <tbody id="tbody">
@@ -100,12 +113,15 @@ require '../include/header.php';
                                     </a>
                                 </td>
                                 <td>
-                                    <a href=<?php echo $base_url . "product/sale.php?slug=" . $cat->slug; ?> class="btn btn-sm btn-outline-success">
+                                    <a href=<?php echo $base_url . "product/index.php?sale=true&product_slug=" . $cat->slug; ?> class="btn btn-sm btn-outline-success">
                                         Sale
                                     </a>
                                     <a href=<?php echo $base_url . "product-buy/index.php?slug=" . $cat->slug; ?> class="btn btn-sm btn-outline-danger">
                                         Buy
                                     </a>
+                                </td>
+                                <td>
+                                    <a href="" class="btn btn-outline-info btn-sm"><i class="fa fa-list"></i> Sale List</a>
                                 </td>
                             </tr>
                         <?php } ?>
@@ -174,7 +190,7 @@ require '../include/footer.php';
                            </a>
                         </td>
                         <td>
-                            <a href="sale.php?slug=${d.slug}" class="btn btn-sm btn-outline-success">
+                            <a href="index.php?sale=true&product_slug=${d.slug}" class="btn btn-sm btn-outline-success">
                                 Sale
                             </a>
                             <a href="${base}product-buy/index.php?slug=${d.slug}" class="btn btn-sm btn-outline-danger">
