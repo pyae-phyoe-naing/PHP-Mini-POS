@@ -14,26 +14,16 @@ if (empty($slug)) {
 }
 
 // paginate
-if (isset($_GET['page'])) {
+if(isset($_GET['page'])){
     $p_id = getOne("select id from product where slug='$slug'")->id;
-    paginatProductBuy($p_id, 2);
+    paginatProductSale($p_id,3);
     die();
 }
-// delete
-if (isset($_GET['action'])) {
-    $id = $_GET['id'];
-    $product_buy_data = getOne("select * from product_buy where id=?", [$id]);
-    $product_data = getOne("select * from product where slug=?", [$_GET['slug']]);
-    $total_qty = $product_data->total_quantity - $product_buy_data->total_quantity;
-    query("delete from product_buy where id=?", [$id]);
-    query("update product set total_quantity=? where slug=?", [$total_qty, $_GET['slug']]);
-    setFlash('success', 'Product Buy Delete');
-    go('index.php?slug=' . $_GET['slug']);
-    die();
-}
-// get buy
+
+// get sale
 $product = getOne("select * from product where slug=?", [$slug]);
-$buy = getAll("select * from product_buy where product_id=$product->id order by id desc limit 2");
+$sale = getAll("select *,(select name from product where product.id=product_sale.product_id) as name
+ from product_sale where product_id=$product->id order by id desc limit 3");
 
 require '../include/header.php';
 ?>
@@ -44,7 +34,7 @@ require '../include/header.php';
         <div class="col-12">
             <span class="text-white">
                 <h5 class="d-inline text-white">Product</h5>
-                > Buy
+                > Sale
             </span>
         </div>
     </div>
@@ -54,9 +44,8 @@ require '../include/header.php';
 <div class="container-fluid pr-5 pl-5 mt-3">
     <div class="card col-8 offset-2">
         <div class="card-header card d-inline">
-            <a href="<?php echo $base_url ?>/product/index.php" class="btn btn-primary mr-5 btn-sm">Back</a>
-            <h4 class="text-white d-inline ">Product Buy</h4>
-            <a href="create.php?slug=<?php echo $slug; ?>" class="float-right btn btn-danger btn-sm">create</a>
+            <a href="<?php echo $base_url?>/product/index.php" class="btn btn-danger btn-sm">Back</a>
+            <h4 class="text-white d-inline ml-3">Product Sale List</h4>
         </div>
         <div class="card-body">
             <?php flash('error'); ?>
@@ -65,26 +54,22 @@ require '../include/header.php';
                 <thead>
                     <tr>
                         <th>Buy Price</th>
-                        <th>Total Quantity</th>
-                        <th>Buy Date</th>
-                        <th> Option</th>
+                        <th>Sale Price</th>
+                        <th>Sale Date</th>
+
                     </tr>
                 </thead>
                 <tbody id="tbody">
                     <?php
 
-                    foreach ($buy as $b) {
+                    foreach ($sale as $b) {
                     ?>
                         <tr class="text-white">
 
-                            <td><?php echo $b->buy_price; ?></td>
-                            <td><?php echo $b->total_quantity; ?></td>
-                            <td><?php echo $b->buy_date; ?></td>
-                            <td>
-                                <a href="index.php?action=delete&slug=<?php echo $slug; ?>&id=<?php echo $b->id; ?>" onclick="return confirm('Are you sure delete?')" class="btn btn-danger btn-sm">
-                                    <span class="fa fa-trash-alt"></span>
-                                </a>
-                            </td>
+                            <td><?php echo $b->name; ?></td>
+                            <td><?php echo $b->sale_price; ?></td>
+                            <td><?php echo $b->date; ?></td>
+                           
                         </tr>
                     <?php } ?>
                 </tbody>
@@ -112,6 +97,7 @@ require '../include/footer.php';
         paginateBtn.click(function() {
             page += 1;
             $.get(`index.php?slug=${slug}&page=${page}`).then(function(data) {
+                console.log(data);
                 const res = JSON.parse(data);
                 if (!res.length) {
                     $("#paginateBtn").attr("disabled", 'disabled');
@@ -120,14 +106,10 @@ require '../include/footer.php';
                 res.map(function(d) {
                     str += `
                  <tr class='text-white'>
-                       <td>${d.buy_price}</td>
-                       <td>${d.total_quantity}</td>
-                       <td>${d.buy_date}</td>
-                       <td>
-                       <a href="index.php?action=delete&slug=${slug}&id=${d.id}" onclick="return confirm('Are you sure delete?')" class="btn btn-danger btn-sm">
-                            <span class="fa fa-trash-alt"></span>
-                        </a>
-                        </td>
+                       <td>${d.name}</td>
+                       <td>${d.sale_price}</td>
+                       <td>${d.date}</td>
+                      
                    </tr>
                 `;
                 });

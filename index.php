@@ -59,8 +59,11 @@ $name = getOne("select name from shop where id=1")->name;
                     <div class="card" style="background-color:#34D399;">
                         <div class="card-body text-center text-white">
                             <p>Total Sale :</p>
+                            <?php if(!$total_sale){ ?>
+                            <sapn class="badge badge-dark">0</sapn>
+                            <?php }else{ ?>
                             <sapn class="badge badge-dark"><?php echo $total_sale; ?></sapn>
-
+                            <?php } ?>
                         </div>
                     </div>
                 </div>

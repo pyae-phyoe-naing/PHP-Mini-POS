@@ -96,3 +96,20 @@ function paginatProductBuy($p_id,$par_page = 5)
     $data = getAll($sql);
     echo json_encode($data);
 }
+// product sale
+function paginatProductSale($p_id,$par_page = 5)
+{
+    if (isset($_GET['page'])) {
+        $page = $_GET['page'];
+    } else {
+        $page = 2;
+    }
+    if ($page <= 0) {
+        $page = 2;
+    }
+    $start = ($page - 1) * $par_page;
+    $limit = "$start,$par_page";
+    $sql = "select *,(select name from product where product.id=product_sale.product_id) as name from product_sale where product_id=$p_id order by id desc limit $limit";
+    $data = getAll($sql);
+    echo json_encode($data);
+}

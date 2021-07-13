@@ -138,7 +138,7 @@ require '../include/header.php';
                                     </a>
                                 </td>
                                 <td>
-                                    <a href="" class="btn btn-outline-info btn-sm"><i class="fa fa-list"></i> Sale List</a>
+                                    <a href="<?php echo $base_url;?>/product-sale/index.php?slug=<?php echo $cat->slug; ?>" class="btn btn-outline-info btn-sm"><i class="fa fa-list"></i> Sale List</a>
                                 </td>
                             </tr>
                         <?php } ?>
@@ -213,6 +213,9 @@ require '../include/footer.php';
                             <a href="${base}product-buy/index.php?slug=${d.slug}" class="btn btn-sm btn-outline-danger">
                                 Buy
                             </a>
+                        </td>
+                        <td>
+                            <a href="${base}/product-sale/index.php?slug=${d.slug}" class="btn btn-outline-info btn-sm"><i class="fa fa-list"></i> Sale List</a>
                         </td>
                    </tr>
                 `;
