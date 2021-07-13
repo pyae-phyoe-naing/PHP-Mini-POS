@@ -28,7 +28,7 @@ if(isset($_GET['sale']) and !empty($_GET['sale'])){
     $update_qty = $product->total_quantity - 1;
     $date = date("Y-m-d");
     query("update product set total_quantity=? where slug=?",[$update_qty,$product_slug]);
-    query("insert into product_sale (product_id,sale_price,date) values (?,?,?)",[$product_id,$sale_price,$data]);
+    query("insert into product_sale (product_id,sale_price,date) values (?,?,?)",[$product_id,$sale_price,$date]);
     setFlash('success', 'Product sale success');
     go('index.php');
     die();

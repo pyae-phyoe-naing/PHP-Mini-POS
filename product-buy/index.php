@@ -53,7 +53,7 @@ require '../include/header.php';
                     <tr>
                         <th>No</th>
                         <th>Buy Price</th>
-                        <th>Buy Quantity</th>
+                        <th>Total Quantity</th>
                         <th>Buy Date</th>
                         <th> Option</th>
                     </tr>
