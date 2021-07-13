@@ -12,6 +12,14 @@ if (empty($slug)) {
     go('../product/index.php');
     die();
 }
+
+// paginate
+if(isset($_GET['page'])){
+    $p_id = getOne("select id from product where slug='$slug'")->id;
+    paginatProductBuy($p_id,2);
+    die();
+}
+// delete
 if (isset($_GET['action'])) {
     $id = $_GET['id'];
     $product_buy_data = getOne("select * from product_buy where id=?", [$id]);
@@ -20,9 +28,13 @@ if (isset($_GET['action'])) {
     query("delete from product_buy where id=?", [$id]);
     query("update product set total_quantity=? where slug=?", [$total_qty, $_GET['slug']]);
     setFlash('success', 'Product Buy Delete');
-    go('index.php?slug='.$_GET['slug']);
+    go('index.php?slug=' . $_GET['slug']);
     die();
 }
+// get buy
+$product = getOne("select * from product where slug=?", [$slug]);
+$buy = getAll("select * from product_buy where product_id=$product->id order by id desc limit 2");
+
 require '../include/header.php';
 ?>
 
@@ -51,22 +63,19 @@ require '../include/header.php';
             <table class="table">
                 <thead>
                     <tr>
-                        <th>No</th>
                         <th>Buy Price</th>
                         <th>Total Quantity</th>
                         <th>Buy Date</th>
                         <th> Option</th>
                     </tr>
                 </thead>
-                <tbody>
+                <tbody id="tbody">
                     <?php
-                    $product = getOne("select * from product where slug=?", [$slug]);
-                    $buy = getAll("select * from product_buy where product_id=$product->id");
-                    $i = 1;
+
                     foreach ($buy as $b) {
                     ?>
                         <tr class="text-white">
-                            <td><?php echo $i++; ?></td>
+
                             <td><?php echo $b->buy_price; ?></td>
                             <td><?php echo $b->total_quantity; ?></td>
                             <td><?php echo $b->buy_date; ?></td>
@@ -79,6 +88,11 @@ require '../include/header.php';
                     <?php } ?>
                 </tbody>
             </table>
+            <div class="text-center">
+                <button class="btn btn-primary" id='paginateBtn'>
+                    <span class="fa fa-arrow-down"></span>
+                </button>
+            </div>
         </div>
     </div>
 </div>
@@ -87,3 +101,38 @@ require '../include/header.php';
 require '../include/footer.php';
 
 ?>
+<script>
+    $(function() {
+        var page = 1;
+        var tbody = $('#tbody');
+        var paginateBtn = $('#paginateBtn');
+        var slug = "<?php echo $_GET['slug'] ?>";
+
+        paginateBtn.click(function() {
+            page += 1;
+            $.get(`index.php?slug=${slug}&page=${page}`).then(function(data) {
+                const res = JSON.parse(data);
+                if (!res.length) {
+                    $("#paginateBtn").attr("disabled", 'disabled');
+                }
+                var str = '';
+                res.map(function(d) {
+                    str += `
+                 <tr class='text-white'>
+                       <td>${d.buy_price}</td>
+                       <td>${d.total_quantity}</td>
+                       <td>${d.buy_date}</td>
+                       <td>
+                       <a href="index.php?action=delete&slug=${slug}&id=${d.id}" onclick="return confirm('Are you sure delete?')" class="btn btn-danger btn-sm">
+                            <span class="fa fa-trash-alt"></span>
+                        </a>
+                        </td>
+                   </tr>
+                `;
+                });
+                tbody.append(str);
+            })
+
+        })
+    })
+</script>
