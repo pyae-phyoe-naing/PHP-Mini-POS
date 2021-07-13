@@ -36,7 +36,7 @@
             <span class="fa fa-home"></span>
             <span class="ml-1">Home</span>
           </a>
-          <a type="button" class="btn btn-warning me-3 text-white">
+          <a href="manage_shop.php" type="button" class="btn btn-warning me-3 text-white">
             <span class="fas fa-store-alt"></span>
             <span class="ml-1">Manage Shop</span>
           </a>
@@ -59,17 +59,17 @@
             </div>
           </div>
           <!-- Sale -->
-          <a type="button" class="btn btn-warning me-3 text-white">
+          <!-- <a type="button" class="btn btn-warning me-3 text-white">
             <span class="fas fa-balance-scale-left"></span>
             <span class="ml-1">Sale</span>
-          </a>
+          </a> -->
           <!-- Account -->
           <a href="manage_account.php" type="button" class="btn btn-warning me-3 text-white">
             <span class="fa fa-user"></span>
             <span class="ml-1">Manage Account</span>
           </a>
           <!-- Account -->
-          <a type="button" href="<?php echo $base_url; ?>logout.php" class="btn btn-dark me-3 text-white">
+          <a type="button" href="<?php echo $base_url; ?>logout.php" class="btn btn-danger me-3 text-white">
             <span class="fa fa-user"></span>
             <span class="ml-1">Logout</span>
           </a>

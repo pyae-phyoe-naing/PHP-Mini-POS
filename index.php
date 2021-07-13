@@ -38,6 +38,8 @@ $latest_buy = getAll(" SELECT product_buy.*,product.name as product_name FROM `p
                         product_buy.id DESC
                         LIMIT 5
                         ");
+// get shop name
+$name = getOne("select name from shop where id=1")->name;
 
 ?>
 
@@ -46,6 +48,12 @@ $latest_buy = getAll(" SELECT product_buy.*,product.name as product_name FROM `p
     <div class="card">
         <div class="card-body">
             <?php flash('error') ?>
+            <div class="row mb-3">
+                <div class="col-12">
+                 <h2 class='text-white'><?php echo $name; ?></h2>
+                 <?php flash('success', 'success') ?>
+                </div>
+            </div>
             <div class="row">
                 <div class="col-4">
                     <div class="card" style="background-color:#34D399;">

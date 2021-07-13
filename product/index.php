@@ -2,7 +2,7 @@
 require '../init.php';
 if (!isset($_SESSION['user'])) {
     setFlash('error', 'Please First Login');
-    go('login.php');
+    go('../login.php');
     die();
 }
 // paginate
