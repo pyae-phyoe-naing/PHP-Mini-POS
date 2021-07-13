@@ -85,7 +85,7 @@ require '../include/header.php';
                     <input type="date" value="<?php echo date('Y-m-d') ?>" name="buy_date" class="form-control">
                 </div>
                 <button type="submit" class="btn btn-warning mr-3">Buy</button>
-                <a href="index.php?slug=.<?php echo $slug;?>"  class="btn btn-outline-warning">Back</a>
+                <a href="index.php?slug=<?php echo $slug;?>"  class="btn btn-outline-warning">Back</a>
             </form>
         </div>
     </div>
