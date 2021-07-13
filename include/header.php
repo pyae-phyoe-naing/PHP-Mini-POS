@@ -64,7 +64,7 @@
             <span class="ml-1">Sale</span>
           </a>
           <!-- Account -->
-          <a type="button" class="btn btn-warning me-3 text-white">
+          <a href="manage_account.php" type="button" class="btn btn-warning me-3 text-white">
             <span class="fa fa-user"></span>
             <span class="ml-1">Manage Account</span>
           </a>
