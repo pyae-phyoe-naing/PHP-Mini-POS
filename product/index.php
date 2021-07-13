@@ -33,6 +33,23 @@ if(isset($_GET['sale']) and !empty($_GET['sale'])){
     go('index.php');
     die();
 }
+// delete product
+if(isset($_GET['action']) and !empty($_GET['action'])){
+    $slug = $_GET['slug'];
+    $p = getOne("select * from product where slug=?",[$slug]);
+    if(!$p){
+        setFlash('error', 'Product not found');
+        go('index.php');
+        die();
+    }else{
+        unlink('../assets/img/'.$p->image);
+        query("delete from product where slug=?",[$slug]);
+        setFlash('success', 'Product delete success');
+        go('index.php');
+        die();
+    }
+    preety($p->image);
+}
 require '../include/header.php';
 
 ?>
