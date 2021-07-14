@@ -202,7 +202,7 @@ require '../include/footer.php';
                                <i class="fas fa-edit"></i>
                            </a>
                          
-                           <a onclick="return confirm('Are you sure delete?');" href="index.php?slug=${d.slug}" class="btn btn-sm btn-danger">
+                           <a onclick="return confirm('Are you sure delete?');" href="index.php?action=delete&slug=${d.slug}" class="btn btn-sm btn-danger">
                                <i class="fas fa-trash-alt"></i>
                            </a>
                         </td>

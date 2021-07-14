@@ -50,8 +50,8 @@ $name = getOne("select name from shop where id=1")->name;
             <?php flash('error') ?>
             <div class="row mb-3">
                 <div class="col-12">
-                 <h2 class='text-white'><?php echo $name; ?></h2>
-                 <?php flash('success', 'success') ?>
+                    <h2 class='text-white'><?php echo $name; ?></h2>
+                    <?php flash('success', 'success') ?>
                 </div>
             </div>
             <div class="row">
@@ -59,10 +59,10 @@ $name = getOne("select name from shop where id=1")->name;
                     <div class="card" style="background-color:#34D399;">
                         <div class="card-body text-center text-white">
                             <p>Total Sale :</p>
-                            <?php if(!$total_sale){ ?>
-                            <sapn class="badge badge-dark">0</sapn>
-                            <?php }else{ ?>
-                            <sapn class="badge badge-dark"><?php echo $total_sale; ?></sapn>
+                            <?php if (!$total_sale) { ?>
+                                <sapn class="badge badge-dark">0</sapn>
+                            <?php } else { ?>
+                                <sapn class="badge badge-dark"><?php echo $total_sale; ?></sapn>
                             <?php } ?>
                         </div>
                     </div>
@@ -71,8 +71,11 @@ $name = getOne("select name from shop where id=1")->name;
                     <div class="card bg-danger" ">
                       <div class=" card-body text-center text-white">
                         <p>Total Buy :</p>
-                        <sapn class="badge badge-dark"><?php echo $total_buy; ?></sapn>
-
+                        <?php if (!$total_buy) { ?>
+                            <sapn class="badge badge-dark">0</sapn>
+                        <?php } else { ?>
+                            <sapn class="badge badge-dark"><?php echo $total_buy; ?></sapn>
+                        <?php } ?>
                     </div>
                 </div>
             </div>
@@ -97,11 +100,11 @@ $name = getOne("select name from shop where id=1")->name;
                         </tr>
                     </thead>
                     <tbody class="text-white">
-                    <?php foreach($latest_sale as $ls){ ?>
-                        <tr>
-                            <td><?php echo $ls->product_name; ?></td>
-                            <td><?php echo $ls->sale_price; ?></td>
-                        </tr>
+                        <?php foreach ($latest_sale as $ls) { ?>
+                            <tr>
+                                <td><?php echo $ls->product_name; ?></td>
+                                <td><?php echo $ls->sale_price; ?></td>
+                            </tr>
                         <?php } ?>
                     </tbody>
                 </table>
@@ -116,11 +119,11 @@ $name = getOne("select name from shop where id=1")->name;
                         </tr>
                     </thead>
                     <tbody class="text-white">
-                    <?php foreach($latest_buy as $ls){ ?>
-                        <tr>
-                            <td><?php echo $ls->product_name; ?></td>
-                            <td><?php echo $ls->buy_price; ?></td>
-                        </tr>
+                        <?php foreach ($latest_buy as $ls) { ?>
+                            <tr>
+                                <td><?php echo $ls->product_name; ?></td>
+                                <td><?php echo $ls->buy_price; ?></td>
+                            </tr>
                         <?php } ?>
                     </tbody>
                 </table>
